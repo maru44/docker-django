@@ -1,0 +1,27 @@
+version: "3"
+services:
+  web:
+    container_name: docker_test
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    working_dir: /code
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  db:
+    container_name: docker_test_db
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: docker_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    command: mysql --character-set-server=utf8mb4 --collation-server=utf8_unicode_ci
